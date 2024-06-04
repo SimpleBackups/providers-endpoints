@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -31,22 +30,8 @@ func transformRegionName(regionName string, regionCode string) string {
 // The regions and their codes are stored in a map[string]string, where the region code is the key and the region name is the value.
 // If an error occurs during the HTTP request or HTML parsing, nil is returned.
 func getWasabiStorageRegions() map[string]string {
-	url := "https://wasabi.com/locations/"
-
-	// Make a GET request to the URL
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println("Error making GET request:", err)
-		return nil
-	}
-	defer resp.Body.Close()
-
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
-
-	if err != nil {
-		fmt.Println("Error loading HTML:", err)
-		return nil
-	}
+	url := "https://wasabi.com/company/storage-regions"
+	doc, _ := get(url)
 
 	var regionMap map[string]string = make(map[string]string)
 
