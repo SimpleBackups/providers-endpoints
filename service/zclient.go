@@ -11,6 +11,12 @@ import (
 
 var debugging = false
 
+func _log(msg string) {
+	if debugging {
+		fmt.Println(msg)
+	}
+}
+
 func _createRequest(url string) (*http.Request, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -40,7 +46,7 @@ func _getResponse(req *http.Request) (*http.Response, error) {
 
 	if resp.StatusCode == 403 {
 		for i := 0; i < 3; i++ {
-			backoff := time.Duration(math.Pow(2, float64(i))) * (time.Second / 2)
+			backoff := time.Duration(math.Pow(2, float64(i))) * (time.Second / 10)
 			time.Sleep(backoff)
 
 			resp, err = client.Do(req)
@@ -49,10 +55,10 @@ func _getResponse(req *http.Request) (*http.Response, error) {
 			}
 
 			if resp.StatusCode != 403 {
-				// fmt.Printf("Finally a response: %s\n", resp.Status)
 				break
 			}
-			// fmt.Printf("Retry number %d\n", i+1)
+
+			_log(fmt.Sprintf("Retry number %d\n", i+1))
 		}
 	}
 
@@ -65,12 +71,6 @@ func _getResponse(req *http.Request) (*http.Response, error) {
 
 func _parseBody(resp *http.Response) (*goquery.Document, error) {
 	defer resp.Body.Close()
-	if debugging {
-		fmt.Println("Response Status: ", resp.Status)
-		// fmt.Printf("Response Headers: %v\n", resp.Header)
-		body := make([]byte, 1000)
-		resp.Body.Read(body)
-	}
 
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {

@@ -15,7 +15,7 @@ var providers = []struct {
 	{"DigitalOcean", service.GetDigitalOceanRegions},
 	{"UpCloud", service.GetUpcloudRegions},
 	{"Exoscale", service.GetExoscaleRegions},
-	{"Wasabi", service.GetWasabiRegions},
+	// {"Wasabi", service.GetWasabiRegions},
 	{"Google Cloud", service.GetGoogleCloudRegions},
 	{"Backblaze", service.GetBackblazeRegions},
 	{"Linode", service.GetLinodeRegions},

@@ -1,6 +1,10 @@
 package service
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"path/filepath"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -45,10 +49,30 @@ func getUpcloudComputeRegions(doc *goquery.Document) map[string]string {
 func GetUpcloudRegions() Regions {
 	doc, err := get("https://upcloud.com/data-centres")
 	if err != nil {
-		return Regions{}
+		// fmt.Printf("Error: %v", err)
+		// Load the regions from the local file ./upcloud_fallback.json
+		filePath := "./service/upcloud_fallback.json"
+		absPath, _ := filepath.Abs(filePath)
+		jsonContent, err := ioutil.ReadFile(absPath)
+		if err != nil {
+			if debugging {
+				fmt.Printf("Error reading file: %v", err)
+			}
+			return Regions{}
+		}
+
+		// json has "storage" and "compute" keys
+		var regions map[string]map[string]string
+		json.Unmarshal(jsonContent, &regions)
+
+		return Regions{
+			Storage: regions["storage"],
+			Compute: regions["compute"],
+		}
 	}
 	storageRegions := getUpcloudStorageRegions(doc)
 	computeRegions := getUpcloudComputeRegions(doc)
+
 	return Regions{
 		Storage: storageRegions,
 		Compute: computeRegions,

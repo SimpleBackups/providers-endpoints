@@ -33,10 +33,17 @@ func getWasabiStorageRegions() map[string]string {
 	url := "https://wasabi.com/company/storage-regions"
 	doc, _ := get(url)
 
+	if debugging {
+		fmt.Println("Wasabi storage regions URL: ", url)
+	}
+
 	var regionMap map[string]string = make(map[string]string)
 
 	// Iterate over each row in the table body
 	doc.Find("tbody .c-table-row").Each(func(index int, row *goquery.Selection) {
+		if debugging {
+			fmt.Println("Row: ", index)
+		}
 		// For each row, find the cells with class 'c-table-cell'
 		row.Find(".c-table-cell").Each(func(cellIndex int, cell *goquery.Selection) {
 			// Extract the strong text as the region name
