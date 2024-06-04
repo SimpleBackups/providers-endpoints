@@ -27,7 +27,7 @@ func getDigitalOceanSpacesRegions() map[string]string {
 }
 
 func getDigitalOceanDropletRegions() map[string]string {
-	url := "https://docs.digitalocean.com/products/platform/availability-matrix/"
+	url := "https://docs.digitalocean.com/platform/regional-availability/"
 	doc, _ := get(url)
 
 	var regionMap = make(map[string]string)
