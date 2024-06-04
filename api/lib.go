@@ -23,6 +23,7 @@ var providers = []struct {
 	{"Storj", service.GetStorjRegions},
 	{"Vultr", service.GetVultrRegions},
 	{"Hetzner", service.GetHetznerRegions},
+	{"Synology", service.GetSynologyRegions},
 }
 
 func GetRegions() map[string]service.Regions {
